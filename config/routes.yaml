@@ -1,0 +1,107 @@
+payroll_employee_salary_slips:
+  path: /payroll/viewSalarySlips/empNumber/{empNumber}
+  controller: OrangeHRM\Payroll\Controller\EmployeeSalarySlipsController::handle
+
+payroll_employee_salary_slips_download:
+  path: /payroll/downloadSalarySlip/empNumber/{empNumber}/{month}/{year}
+  controller: OrangeHRM\Payroll\Controller\DownloadSalarySlipController::handle
+  
+payroll_management:
+  path: /payroll/manage
+  controller: OrangeHRM\Payroll\Controller\PayrollController::handle
+
+payroll_runs:
+  path: /payroll/runs
+  controller: OrangeHRM\Payroll\Controller\GetPayrollRunsController::handle
+  
+employee_payroll_periods:
+  path: /payroll/periods/{empNumber}
+  controller: OrangeHRM\Payroll\Controller\GetEmployeePayrollPeriodsController::handle
+
+create_payroll_drafts:
+  path: /payroll/draft/create-all
+  controller: OrangeHRM\Payroll\Controller\CreatePayrollDraftsController::handle
+
+get_payroll_drafts:
+  path: /payroll/drafts
+  controller: OrangeHRM\Payroll\Controller\GetPayrollDraftsController::handle
+
+generate_selected_payrolls:
+  path: /payroll/draft/generate-selected
+  controller: OrangeHRM\Payroll\Controller\GenerateSelectedPayrollsController::handle
+
+delete_selected_payroll_drafts:
+  path: /payroll/draft/delete-selected
+  controller: OrangeHRM\Payroll\Controller\DeleteSelectedPayrollDraftsController::handle
+
+import_payroll_draft_items:
+  path: /payroll/draft/import
+  controller: OrangeHRM\Payroll\Controller\ImportPayrollDraftItemsController::handle
+
+download_payroll_draft_import_template:
+  path: /payroll/draft/import-template
+  controller: OrangeHRM\Payroll\Controller\DownloadPayrollDraftImportTemplateController::handle
+
+save_payroll_draft:
+  path: /payroll/draft/save/{draftId}
+  controller: OrangeHRM\Payroll\Controller\SavePayrollDraftController::handle
+
+get_payroll_draft:
+  path: /payroll/draft/{draftId}
+  controller: OrangeHRM\Payroll\Controller\GetPayrollDraftController::handle
+
+add_payroll_draft_item:
+  path: /payroll/draft/item/add
+  controller: OrangeHRM\Payroll\Controller\AddPayrollDraftItemController::handle
+
+delete_payroll_draft_item:
+  path: /payroll/draft/item/delete/{id}
+  controller: OrangeHRM\Payroll\Controller\DeletePayrollDraftItemController::handle
+
+payroll_dashboard:
+  path: /payroll/dashboard
+  controller: OrangeHRM\Payroll\Controller\GetPayrollDashboardController::handle
+
+payroll_report:
+  path: /payroll/report
+  controller: OrangeHRM\Payroll\Controller\GetPayrollReportController::handle
+
+payroll_report_export_csv:
+  path: /payroll/report/export/csv
+  controller: OrangeHRM\Payroll\Controller\ExportPayrollCsvController::handle
+
+payroll_settings:
+  path: /payroll/settings
+  controller: OrangeHRM\Payroll\Controller\GetPayrollSettingsController::handle
+
+payroll_settings_save:
+  path: /payroll/settings/save
+  controller: OrangeHRM\Payroll\Controller\SavePayrollSettingsController::handle
+
+payroll_dashboard_chart:
+  path: /payroll/dashboard/chart
+  controller: OrangeHRM\Payroll\Controller\GetPayrollChartController::handle
+
+payroll_dashboard_view:
+  path: /payroll/viewPayrollDashboard
+  controller: OrangeHRM\Payroll\Controller\PayrollDashboardController::handle
+
+payroll_management_view:
+  path: /payroll/viewPayrollManagement
+  controller: OrangeHRM\Payroll\Controller\PayrollManagementController::handle
+
+payroll_settings_view:
+  path: /payroll/viewPayrollSettings
+  controller: OrangeHRM\Payroll\Controller\PayrollSettingsController::handle
+
+payroll_reports_view:
+  path: /payroll/viewPayrollReports
+  controller: OrangeHRM\Payroll\Controller\PayrollReportsController::handle
+
+payroll_admin_payslips:
+  path: /payroll/viewEmployeeSalarySlips
+  controller: OrangeHRM\Payroll\Controller\AdminPayslipsController::handle
+
+payroll_history:
+  path: /payroll/viewPayrollHistory
+  controller: OrangeHRM\Payroll\Controller\PayrollHistoryController::handle
