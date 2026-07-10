@@ -1,5 +1,8 @@
 # OrangeHRM Payroll Plugin Installation Guide
 
+> [!NOTE]
+> For a fully formatted step-by-step walkthrough, refer to the [Payroll Plugin Installation Guide](docs/OHRM_payroll_plugin_installation.html).
+
 This guide details how to install and configure the payroll plugin on a standard OrangeHRM installation.
 
 ---
