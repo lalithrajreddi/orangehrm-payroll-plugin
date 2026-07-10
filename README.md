@@ -4,6 +4,34 @@ Instructions for deploying, installing, and validating the custom Payroll Plugin
 
 ---
 
+## Key Features
+
+The custom OrangeHRM Payroll Plugin offers a fully integrated suite of tools to manage company payrolls, configure allowances, and issue high-fidelity salary slips to employees:
+
+- **Interactive Payroll Dashboard**:
+  - High-performance dashboard utilizing Chart.js to visualize payroll expenses and trends over time.
+  - Quick summaries showing Gross Salary, Allowances, Deductions, and Net Salary metrics.
+- **Bulk Payroll Management**:
+  - Manage draft calculations, add draft items, and edit or delete draft items.
+  - CSV Import/Export capability: import bulk payroll runs using a clean template, and export drafts to CSV.
+  - Generate payroll runs for selected months and years.
+- **Flexible Calculation Settings**:
+  - Customizable percentage values for standard Indian statutory deductions (EPF, ESI, TDS, Professional Tax, etc.).
+  - Automatic Net Pay calculation based on base pay, allowances, and statutory deductions.
+- **Personalized Salary Slips (ESS & Admin)**:
+  - Role-specific access allows employees (ESS) to view and download their historical payslips from their personal PIM profiles.
+  - Admins can query and generate slips for any employee and run historical reports.
+- **High-Fidelity PDF Generation**:
+  - ReportLab-based vector layout drawing clean headers, transactions table, net pay card, and legal disclaimers.
+  - Dynamic branding: automatically retrieves the company name and branding logo from the database (falls back to default system branding if not uploaded).
+  - Indian Currency Words Converter: translates Net Pay numbers into text format (e.g. *"Rupees Fourteen Thousand and Fifty Paise Only"*).
+  - PIM Custom Fields Mapping: automatically extracts and displays employee PAN No, PF No, PF UAN, and Aadhaar No from standard PIM custom fields.
+  - Smart File Naming: downloaded PDF files are automatically named like `Payslip_August_2025_EDGE0140.pdf`.
+- **Self-Healing Installation**:
+  - Bootstrapper automatically creates tables, registers core side-navigation menus, grants user role permissions (Admin, ESS, Manager), and seeds default configuration constants on first system visit.
+
+---
+
 ## I. Deployment Architecture
 
 The Payroll Plugin integrates both server-side PHP components (controllers, database entities, and calculations) and client-side Vue components (charts and interfaces). To make installation completely plug-and-play, a custom Node helper script automates file copies and dependency registration, while a self-healing backend bootstrapper generates the database tables dynamically on first request.
