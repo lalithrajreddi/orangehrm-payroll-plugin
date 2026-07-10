@@ -1,91 +1,68 @@
-# OrangeHRM Payroll Plugin Installation Guide
+# OrangeHRM Payroll Plugin Deployment Guide
 
-> [!NOTE]
-> For a fully formatted step-by-step walkthrough, refer to the [Payroll Plugin Installation Guide](docs/OHRM_payroll_plugin_installation.html).
-
-This guide details how to install and configure the payroll plugin on a standard OrangeHRM installation.
+Instructions for deploying, installing, and validating the custom Payroll Plugin on a clean or existing OrangeHRM installation.
 
 ---
 
-## 1. Directory Structure Setup
+## I. Deployment Architecture
 
-The plugin consists of two separate components: a PHP/Symfony backend plugin and a Vue.js frontend module. Copy the folders to the locations below:
-
-1. **Backend Plugin**: Copy the `orangehrmPayrollPlugin` folder to `src/plugins/`
-   - Target path: `src/plugins/orangehrmPayrollPlugin`
-2. **Frontend Plugin**: Copy the `orangehrmPayrollPlugin` folder to `src/client/src/`
-   - Target path: `src/client/src/orangehrmPayrollPlugin`
+The Payroll Plugin integrates both server-side PHP components (controllers, database entities, and calculations) and client-side Vue components (charts and interfaces). To make installation completely plug-and-play, a custom Node helper script automates file copies and dependency registration, while a self-healing backend bootstrapper generates the database tables dynamically on first request.
 
 ---
 
-## 2. Register Backend Classes & Entities
+## II. Installation Workflow
 
-OrangeHRM uses Composer for autoloading PHP namespaces and Doctrine for database mapping.
+Follow these steps on the host machine to deploy the plugin:
 
-1. Open `src/composer.json`.
-2. Locate the `"autoload"` block, and add the payroll namespace mapping under `"psr-4"`:
-   ```json
-   "OrangeHRM\\Payroll\\": "plugins/orangehrmPayrollPlugin"
-   ```
-3. Locate the `"OrangeHRM\\Entity\\"` entry (which lists entity mapping paths) and add your entity folder to the array:
-   ```json
-   "./plugins/orangehrmPayrollPlugin/entity"
-   ```
-4. Regenerate the Composer autoloader classes and clean the caching proxies by running the following command from the `src/` directory:
-   ```bash
-   composer dump-autoload
-   ```
+### 1. Drop in the Plugin Files
+Copy the entire `orangehrmPayrollPlugin` directory into the main application plugin directory:
+```bash
+# Destination folder
+src/plugins/orangehrmPayrollPlugin
+```
 
----
+### 2. Run the Automated Installer
+Execute the installer helper script from the plugin folder. This script automatically handles routing registrations inside `pages.ts`, installs `chart.js` inside `package.json`, maps autoloader namespaces in `composer.json`, and automatically patches core PIM services (injecting the profile "Salary Slips" submenu inside `PIMLeftMenuService.php` and the `getEmployeeSalaryList` method in `EmployeeSalaryService.php`):
+```bash
+node src/plugins/orangehrmPayrollPlugin/install.js
+```
 
-## 3. Register Frontend Routes
+### 3. Update Composer Autoloader
+Re-generate the Composer class map on the host to register the new namespaces:
+```bash
+cd src
+composer install
+```
 
-We need to register the payroll Vue pages and routes with the core Vue bundle.
+### 4. Compile Client Vue Assets
+Navigate to the client folder, download dependencies (including the newly added Chart.js library), and compile the Vue static assets:
+```bash
+cd client
+yarn install
+yarn build
+```
 
-1. Open `src/client/src/pages.ts`.
-2. Import the payroll pages at the top of the file:
-   ```typescript
-   import PayrollPages from '@/orangehrmPayrollPlugin';
-   ```
-3. Register the pages by spreading them inside the `export default` block:
-   ```typescript
-   export default {
-     ...PayrollPages,
-     // ... other plugins
-   };
-   ```
-4. Build the compiled production assets. Change your terminal path to `src/client` and run the build:
-   ```bash
-   yarn build
-   # or: npm run build
-   ```
+### 5. Reload the Container
+Rebuild and restart the container stack to flush the PHP OPcache and load the updated autoloader:
+```bash
+cd ../..
+docker compose -f docker-compose.fast.yml build orangehrm
+docker compose -f docker-compose.fast.yml up -d orangehrm
+```
 
 ---
 
-## 4. Database Setup & Initialization
+## III. Activation & Verification
 
-The database integration consists of creating the tables and loading configuration menus/roles.
+Once the containers are rebooted, the installation is verified as follows:
 
-1. **Create Tables**: Sync your Doctrine entities to automatically generate the database schema tables. Run this from the root directory:
-   ```bash
-   php bin/console doctrine:schema:update --force
-   ```
+### 1. Automatic Database Generation
+Open your browser and navigate to **`http://localhost:8080`**. Log in with your admin user. On this first page hit, the plugin bootstrapper detects that the payroll tables are missing and invokes Doctrine's `SchemaTool` to generate them automatically:
+- `ohrm_payroll_run`
+- `ohrm_payroll_draft`
+- `ohrm_payroll_draft_item`
+- `ohrm_payroll_item`
+- `ohrm_payroll_settings`
 
-2. **Automated Metadata Setup**:
-   The plugin comes with a configuration bootstrap (`PayrollPluginConfiguration.php`). As soon as you open OrangeHRM or load the dashboard for the first time, it will automatically register:
-   - All 7 payroll screens.
-   - User role permissions (read/write access for admin, ESS/employees, and managers).
-   - Sidebar menus and navigation tabs.
-   - Role-specific default landing pages (e.g. Admin landing on the Dashboard, employees landing on Salary Slips).
-   - Initial calculation settings seeds (e.g., ESI, PF, TDS, Professional Tax percentages).
-
----
-
-## 5. System Dependencies
-
-The payslip PDF rendering relies on a python utility. Ensure the host server has:
-1. `python3` installed.
-2. The `reportlab` library installed for PDF canvas drawing:
-   ```bash
-   pip install reportlab
-   ```
+### 2. Check Sidebar Menu & Layout
+The **Payroll** tab will appear in the main navigation sidebar. Clicking on it opens the interactive payroll sheets, charts, salary history, and default configuration items automatically.
